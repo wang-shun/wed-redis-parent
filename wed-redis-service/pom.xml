@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>wed-redis-parent</artifactId>
+        <groupId>com.dianping</groupId>
+        <version>1.0.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wed-redis-service</artifactId>
+    <packaging>war</packaging>
+    <version>1.0.0.0-SNAPSHOT</version>
+    <name>wed-redis-service</name>
+
+    <properties>
+        <env>alpha</env>
+        <dp.wed-redis-biz.version>1.0.0.8</dp.wed-redis-biz.version>
+        <dp.cat-client.version>1.3.4</dp.cat-client.version>
+        <dp.cat-core.version>1.3.4</dp.cat-core.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.dianping</groupId>
+            <artifactId>wed-redis-biz</artifactId>
+            <version>${dp.wed-redis-biz.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-client</artifactId>
+            <version>${dp.cat-client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-core</artifactId>
+            <version>${dp.cat-core.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1-alpha-1</version>
+                <configuration>
+                    <warName>${artifactId}-${env}-${version}</warName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <workspace>${basedir}</workspace>
+                    <workspaceCodeStylesURL>
+                        http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin/src/optional/eclipse-config/maven-styles.xml
+                    </workspaceCodeStylesURL>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>false</downloadJavadocs>
+                    <wtpversion>1.5</wtpversion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

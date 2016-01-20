@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- The SqlMapClient configuration for avatar-based System -->
+	<bean id="Wedding.Main.sqlMapClient" class="com.dianping.avatar.dao.ibatis.spring.LimitSqlMapClientFactoryBean">
+		<property name="dataSource" ref="Wedding.Main.dataSource" />
+		<property name="configLocation" value="classpath:/config/sqlmap/sqlmap-config.xml" />
+		<property name="sqlConvert" ref="mysqlConverter" />
+	</bean>
+
+	<!-- The DAO default implementation for avatar -->
+	<bean id="Wedding.Main.daoRealizeTarget" class="com.dianping.avatar.dao.ibatis.IBatisGenericDaoImpl" abstract="true">
+		<property name="sqlMapClient" ref="Wedding.Main.sqlMapClient" />
+	</bean>
+	
+	<!-- shopbusiness-beans的事务管理 -->
+	<bean id="sbsTransactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="sbsTransactionManager" />
+	</bean>
+	
+	<bean id="sbsTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="Wedding.Main.dataSource" />
+	</bean>
+
+</beans>

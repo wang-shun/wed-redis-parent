@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="WeddingRedisKeyConfiguration">
+    <typeAlias alias="WeddingRedisKeyConfiguration" type="com.dianping.wed.cache.redis.entity.WeddingRedisKeyConfiguration"/>
+    <resultMap id="weddingRedisKeyConfiguration" class="WeddingRedisKeyConfiguration">
+        <result column="ID" property="id" />
+        <result column="Category" property="category"/>
+        <result column="DataType" property="dataType"/>
+        <result column="Duration" property="duration"/>
+        <result column="Template" property="template"/>
+        <result column="TemplateDesc" property="templateDesc"/>
+        <result column="Version" property="version"/>
+        <result column="AddTime" property="addTime"/>
+        <result column="UpdateTime" property="updateTime"/>
+    </resultMap>
+
+    <sql id="allFields">
+      ID,
+      Category,
+      DataType,
+      Duration,
+      Template,
+      TemplateDesc,
+      Version,
+      AddTime,
+      UpdateTime
+    </sql>
+
+    <select id="loadRedisKeyCfgByCategory" parameterClass="map" resultMap="weddingRedisKeyConfiguration">
+        <![CDATA[
+			SELECT
+		]]>
+        <include refid="allFields"/>
+        <![CDATA[
+			FROM
+				WED_RedisKeyConfiguration
+			WHERE
+				Category = #category#
+			LIMIT 1
+		]]>
+    </select>
+
+    <insert id="addRedisKeyConfiguration" parameterClass="map">
+        <![CDATA[
+            INSERT INTO WED_RedisKeyConfiguration
+            (
+                Category,
+                DataType,
+                Duration,
+                Template,
+                TemplateDesc,
+                Version,
+                AddTime,
+                UpdateTime
+            )
+            VALUES
+            (
+                #weddingRedisKeyConfiguration.category#,
+                #weddingRedisKeyConfiguration.dataType#,
+                #weddingRedisKeyConfiguration.duration#,
+                #weddingRedisKeyConfiguration.template#,
+                #weddingRedisKeyConfiguration.templateDesc#,
+                #weddingRedisKeyConfiguration.version#,
+                NOW(),
+                NOW()
+            )
+        ]]>
+        <selectKey resultClass="int" keyProperty="id">
+            SELECT @@IDENTITY
+            AS id
+        </selectKey>
+    </insert>
+
+    <update id="updateRedisKeyConfiguration" parameterClass="map">
+        <![CDATA[
+			UPDATE WED_RedisKeyConfiguration
+			SET
+			    DataType = #weddingRedisKeyConfiguration.dataType#,
+                Duration = #weddingRedisKeyConfiguration.duration#,
+                Template = #weddingRedisKeyConfiguration.template#,
+                TemplateDesc = #weddingRedisKeyConfiguration.templateDesc#,
+                Version = #weddingRedisKeyConfiguration.version#,
+                UpdateTime = NOW()
+			WHERE
+				Category = #weddingRedisKeyConfiguration.category#
+		]]>
+    </update>
+
+    <delete id="deleteRedisKeyConfiguration" parameterClass="map">
+        <![CDATA[
+			DELETE FROM WED_RedisKeyConfiguration
+			WHERE
+                Category = #category#
+		]]>
+    </delete>
+
+    <select id="paginateRedisKeyConfiguration" parameterClass="map" resultMap="weddingRedisKeyConfiguration">
+        SELECT
+        <include refid="allFields"/>
+        FROM WED_RedisKeyConfiguration
+        WHERE 1=1
+        <isNotNull property="weddingRedisKeyConfiguration.category" prepend="AND">
+            Category = #weddingRedisKeyConfiguration.category#
+        </isNotNull>
+        ORDER BY ID DESC
+    </select>
+
+    <select id="paginateRedisKeyConfiguration_COUNT" parameterClass="map" resultClass="int">
+        SELECT
+        COUNT(ID)
+        FROM WED_RedisKeyConfiguration
+        WHERE 1=1
+        <isNotNull property="weddingRedisKeyConfiguration.category" prepend="AND">
+            Category = #weddingRedisKeyConfiguration.category#
+        </isNotNull>
+    </select>
+
+</sqlMap>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+    <!-- 消费者工厂类 -->
+    <bean id="consumerFactory" class="com.dianping.swallow.consumer.impl.ConsumerFactoryImpl" factory-method="getInstance" />
+    <!-- 消费者配置类 -->
+    <bean id="consumerConfig" class="com.dianping.swallow.consumer.ConsumerConfig">
+        <property name="consumerType" value="NON_DURABLE"/>
+    </bean>
+    <!-- 消息的目的地(即Topic) -->
+    <bean id="dest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
+        <constructor-arg>
+            <value>wed_rediscnfsyc</value>
+        </constructor-arg>
+    </bean>
+    <!-- MessageListener为您实现的消息事件监听器，负责处理接收到的消息 -->
+    <bean id="redisConfMemoryCacheClearListener" class="com.dianping.wed.cache.redis.swallow.RedisConfMemoryCacheClearListener" />
+    <!-- 消费者 -->
+
+    <bean id="consumerClient" factory-bean="consumerFactory" factory-method="createConsumer" init-method="start" destroy-method="close">
+        <constructor-arg>
+            <ref bean="dest" />
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="consumerConfig" />
+        </constructor-arg>
+        <property name="listener">
+            <ref local="redisConfMemoryCacheClearListener" />
+        </property>
+    </bean>
+</beans>
